@@ -48,36 +48,36 @@
 /*
  * First, socket and INET6 related definitions 
  */
-#ifndef HAVE_STRUCT_SOCKADDR_STORAGE
-# define	_SS_MAXSIZE	128	/* Implementation specific max size */
-# define       _SS_PADSIZE     (_SS_MAXSIZE - sizeof (struct sockaddr))
-struct sockaddr_storage {
-	struct sockaddr	ss_sa;
-	char		__ss_pad2[_SS_PADSIZE];
-};
-# define ss_family ss_sa.sa_family
-#endif /* !HAVE_STRUCT_SOCKADDR_STORAGE */
-
-#ifndef IN6_IS_ADDR_LOOPBACK
-# define IN6_IS_ADDR_LOOPBACK(a) \
-	(((uint32_t *)(a))[0] == 0 && ((uint32_t *)(a))[1] == 0 && \
-	 ((uint32_t *)(a))[2] == 0 && ((uint32_t *)(a))[3] == htonl(1))
-#endif /* !IN6_IS_ADDR_LOOPBACK */
-
-#ifndef HAVE_STRUCT_IN6_ADDR
-struct in6_addr {
-	uint8_t	s6_addr[16];
-};
-#endif /* !HAVE_STRUCT_IN6_ADDR */
-
-#ifndef HAVE_STRUCT_SOCKADDR_IN6
-struct sockaddr_in6 {
-	unsigned short	sin6_family;
-	uint16_t	sin6_port;
-	uint32_t	sin6_flowinfo;
-	struct in6_addr	sin6_addr;
-};
-#endif /* !HAVE_STRUCT_SOCKADDR_IN6 */
+//#ifndef HAVE_STRUCT_SOCKADDR_STORAGE
+//# define	_SS_MAXSIZE	128	/* Implementation specific max size */
+//# define       _SS_PADSIZE     (_SS_MAXSIZE - sizeof (struct sockaddr))
+//struct sockaddr_storage {
+//	struct sockaddr	ss_sa;
+//	char		__ss_pad2[_SS_PADSIZE];
+//};
+//# define ss_family ss_sa.sa_family
+//#endif /* !HAVE_STRUCT_SOCKADDR_STORAGE */
+//
+//#ifndef IN6_IS_ADDR_LOOPBACK
+//# define IN6_IS_ADDR_LOOPBACK(a) \
+//	(((uint32_t *)(a))[0] == 0 && ((uint32_t *)(a))[1] == 0 && \
+//	 ((uint32_t *)(a))[2] == 0 && ((uint32_t *)(a))[3] == htonl(1))
+//#endif /* !IN6_IS_ADDR_LOOPBACK */
+//
+//#ifndef HAVE_STRUCT_IN6_ADDR
+//struct in6_addr {
+//	uint8_t	s6_addr[16];
+//};
+//#endif /* !HAVE_STRUCT_IN6_ADDR */
+//
+//#ifndef HAVE_STRUCT_SOCKADDR_IN6
+//struct sockaddr_in6 {
+//	unsigned short	sin6_family;
+//	uint16_t	sin6_port;
+//	uint32_t	sin6_flowinfo;
+//	struct in6_addr	sin6_addr;
+//};
+//#endif /* !HAVE_STRUCT_SOCKADDR_IN6 */
 
 #ifndef AF_INET6
 /* Define it to something that should never appear */
@@ -132,18 +132,18 @@ struct sockaddr_in6 {
 # define EAI_SYSTEM	(INT_MAX - 4)
 #endif
 
-#ifndef HAVE_STRUCT_ADDRINFO
-struct addrinfo {
-	int	ai_flags;	/* AI_PASSIVE, AI_CANONNAME */
-	int	ai_family;	/* PF_xxx */
-	int	ai_socktype;	/* SOCK_xxx */
-	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
-	size_t	ai_addrlen;	/* length of ai_addr */
-	char	*ai_canonname;	/* canonical name for hostname */
-	struct sockaddr *ai_addr;	/* binary address */
-	struct addrinfo *ai_next;	/* next structure in linked list */
-};
-#endif /* !HAVE_STRUCT_ADDRINFO */
+//#ifndef HAVE_STRUCT_ADDRINFO
+//struct addrinfo {
+//	int	ai_flags;	/* AI_PASSIVE, AI_CANONNAME */
+//	int	ai_family;	/* PF_xxx */
+//	int	ai_socktype;	/* SOCK_xxx */
+//	int	ai_protocol;	/* 0 or IPPROTO_xxx for IPv4 and IPv6 */
+//	size_t	ai_addrlen;	/* length of ai_addr */
+//	char	*ai_canonname;	/* canonical name for hostname */
+//	struct sockaddr *ai_addr;	/* binary address */
+//	struct addrinfo *ai_next;	/* next structure in linked list */
+//};
+//#endif /* !HAVE_STRUCT_ADDRINFO */
 
 #ifndef HAVE_GETADDRINFO
 #ifdef getaddrinfo
