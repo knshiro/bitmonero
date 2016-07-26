@@ -26,64 +26,30 @@
 # STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF
 # THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# include (${PROJECT_SOURCE_DIR}/cmake/libutils.cmake)
-include (${PROJECT_SOURCE_DIR}/cmake/MergeStaticLibs.cmake)
+set(rpc_sources
+  core_rpc_server.cpp)
 
-set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
+set(rpc_headers)
 
-set(wallet_sources
-  wallet2.cpp
-  wallet_rpc_server.cpp
-  api/wallet.cpp
-  api/wallet_manager.cpp
-  api/transaction_info.cpp
-  api/transaction_history.cpp
-  api/pending_transaction.cpp
-  api/utils.cpp)
+set(rpc_private_headers
+  core_rpc_server.h
+  core_rpc_server_commands_defs.h
+  core_rpc_server_error_codes.h)
 
-set(wallet_api_headers
-    wallet2_api.h)
-    
-
-set(wallet_private_headers
-  wallet2.h
-  wallet_errors.h
-  wallet_rpc_server.h
-  wallet_rpc_server_commands_defs.h
-  wallet_rpc_server_error_codes.h
-  api/wallet.h
-  api/wallet_manager.h
-  api/transaction_info.h
-  api/transaction_history.h
-  api/pending_transaction.h
-  api/common_defines.h)
-
-bitmonero_private_headers(wallet
-  ${wallet_private_headers})
-bitmonero_add_library(wallet
-  ${wallet_sources}
-  ${wallet_api_headers}
-  ${wallet_private_headers})
-target_link_libraries(wallet
-  LINK_PUBLIC
-    cryptonote_core
-    mnemonics
+bitmonero_private_headers(rpc
+  ${rpc_private_headers})
+bitmonero_add_library(rpc
+  ${rpc_sources}
+  ${rpc_headers}
+  ${rpc_private_headers})
+target_link_libraries(rpc
   LINK_PRIVATE
-    ${Boost_SERIALIZATION_LIBRARY}
+    cryptonote_core
+    cryptonote_protocol
+    ${Boost_CHRONO_LIBRARY}
+    ${Boost_REGEX_LIBRARY}
     ${Boost_SYSTEM_LIBRARY}
     ${Boost_THREAD_LIBRARY}
-    ${Boost_REGEX_LIBRARY}
     ${EXTRA_LIBRARIES})
-
-
-set(libs_to_merge wallet cryptonote_core mnemonics common crypto)
-#MERGE_STATIC_LIBS(wallet_merged wallet_merged "${libs_to_merge}")
-merge_static_libs(wallet_merged "${libs_to_merge}")
-
-install(TARGETS wallet_merged
-    ARCHIVE DESTINATION lib)
-
-install(FILES ${wallet_api_headers}
-    DESTINATION include/wallet)
-
-
+add_dependencies(rpc
+  version)

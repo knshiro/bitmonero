@@ -34,6 +34,8 @@
 #include "crypto/crypto.h"
 #include "serialization/keyvalue_serialization.h"
 
+#define swift __attribute__((annotate("swift")))
+
 namespace cryptonote
 {
 
@@ -53,7 +55,7 @@ namespace cryptonote
   /************************************************************************/
   /*                                                                      */
   /************************************************************************/
-  class account_base
+  class swift account_base
   {
   public:
     account_base();
