@@ -41,6 +41,8 @@ namespace cryptonote
 #define CORE_RPC_STATUS_BUSY   "BUSY"
 #define CORE_RPC_STATUS_NOT_MINING "NOT MINING"
 
+#define CORE_RPC_VERSION 3
+
   struct COMMAND_RPC_GET_HEIGHT
   {
     struct request
@@ -74,18 +76,38 @@ namespace cryptonote
       END_KV_SERIALIZE_MAP()
     };
 
+    struct tx_output_indices
+    {
+      std::vector<uint64_t> indices;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(indices)
+      END_KV_SERIALIZE_MAP()
+    };
+
+    struct block_output_indices
+    {
+      std::vector<tx_output_indices> indices;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(indices)
+      END_KV_SERIALIZE_MAP()
+    };
+
     struct response
     {
       std::list<block_complete_entry> blocks;
       uint64_t    start_height;
       uint64_t    current_height;
       std::string status;
+      std::vector<block_output_indices> output_indices;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(blocks)
         KV_SERIALIZE(start_height)
         KV_SERIALIZE(current_height)
         KV_SERIALIZE(status)
+        KV_SERIALIZE(output_indices)
       END_KV_SERIALIZE_MAP()
     };
   };
@@ -269,6 +291,84 @@ namespace cryptonote
     };
   };
   //-----------------------------------------------
+  struct COMMAND_RPC_GET_OUTPUTS
+  {
+    struct out
+    {
+      uint64_t amount;
+      uint64_t index;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(amount)
+        KV_SERIALIZE(index)
+      END_KV_SERIALIZE_MAP()
+    };
+
+    struct request
+    {
+      std::vector<out> outputs;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(outputs)
+      END_KV_SERIALIZE_MAP()
+    };
+
+    struct outkey
+    {
+      crypto::public_key key;
+      rct::key mask;
+      bool unlocked;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE_VAL_POD_AS_BLOB(key)
+        KV_SERIALIZE_VAL_POD_AS_BLOB(mask)
+        KV_SERIALIZE(unlocked)
+      END_KV_SERIALIZE_MAP()
+    };
+
+    struct response
+    {
+      std::vector<outkey> outs;
+      std::string status;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(outs)
+        KV_SERIALIZE(status)
+      END_KV_SERIALIZE_MAP()
+    };
+  };
+
+  struct COMMAND_RPC_GET_RANDOM_RCT_OUTPUTS
+  {
+    struct request
+    {
+      uint64_t outs_count;
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(outs_count)
+      END_KV_SERIALIZE_MAP()
+    };
+
+#pragma pack (push, 1)
+    struct out_entry
+    {
+      uint64_t amount;
+      uint64_t global_amount_index;
+      crypto::public_key out_key;
+      rct::key commitment;
+    };
+#pragma pack(pop)
+
+    struct response
+    {
+      std::list<out_entry> outs;
+      std::string status;
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE_CONTAINER_POD_AS_BLOB(outs)
+        KV_SERIALIZE(status)
+      END_KV_SERIALIZE_MAP()
+    };
+  };
+  //-----------------------------------------------
   struct COMMAND_RPC_SEND_RAW_TX
   {
     struct request
@@ -298,6 +398,7 @@ namespace cryptonote
       bool too_big;
       bool overspend;
       bool fee_too_low;
+      bool not_rct;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(status)
@@ -310,6 +411,7 @@ namespace cryptonote
         KV_SERIALIZE(too_big)
         KV_SERIALIZE(overspend)
         KV_SERIALIZE(fee_too_low)
+        KV_SERIALIZE(not_rct)
       END_KV_SERIALIZE_MAP()
     };
   };
@@ -1069,11 +1171,13 @@ namespace cryptonote
       std::vector<uint64_t> amounts;
       uint64_t min_count;
       uint64_t max_count;
+      bool unlocked;
 
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(amounts);
         KV_SERIALIZE(min_count);
         KV_SERIALIZE(max_count);
+        KV_SERIALIZE(unlocked);
       END_KV_SERIALIZE_MAP()
     };
 
@@ -1099,6 +1203,26 @@ namespace cryptonote
       BEGIN_KV_SERIALIZE_MAP()
         KV_SERIALIZE(status)
         KV_SERIALIZE(histogram)
+      END_KV_SERIALIZE_MAP()
+    };
+  };
+
+  struct COMMAND_RPC_GET_VERSION
+  {
+    struct request
+    {
+      BEGIN_KV_SERIALIZE_MAP()
+      END_KV_SERIALIZE_MAP()
+    };
+
+    struct response
+    {
+      std::string status;
+      uint32_t version;
+
+      BEGIN_KV_SERIALIZE_MAP()
+        KV_SERIALIZE(status)
+        KV_SERIALIZE(version)
       END_KV_SERIALIZE_MAP()
     };
   };
