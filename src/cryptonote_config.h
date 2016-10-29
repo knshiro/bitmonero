@@ -62,7 +62,8 @@
 // COIN - number of smallest units in one coin
 #define COIN                                            ((uint64_t)1000000000000) // pow(10, 12)
 
-#define FEE_PER_KB                                      ((uint64_t)10000000000) // pow(10, 10)
+#define FEE_PER_KB_OLD                                  ((uint64_t)10000000000) // pow(10, 10)
+#define FEE_PER_KB                                      ((uint64_t)2000000000) // 2 * pow(10, 9)
 
 #define ORPHANED_BLOCKS_MAX_COUNT                       100
 
@@ -126,7 +127,7 @@ namespace config
 {
   uint64_t const DEFAULT_FEE_ATOMIC_XMR_PER_KB = 500; // Just a placeholder!  Change me!
   uint8_t const FEE_CALCULATION_MAX_RETRIES = 10;
-  uint64_t const DEFAULT_DUST_THRESHOLD = ((uint64_t)10000000000); // pow(10, 10)
+  uint64_t const DEFAULT_DUST_THRESHOLD = ((uint64_t)2000000000); // 2 * pow(10, 9)
   uint64_t const BASE_REWARD_CLAMP_THRESHOLD = ((uint64_t)100000000); // pow(10, 8)
   std::string const P2P_REMOTE_DEBUG_TRUSTED_PUB_KEY = "0000000000000000000000000000000000000000000000000000000000000000";
 
